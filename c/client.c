@@ -15,7 +15,7 @@ int main()
 	int sockfd;
 	char c, rc;
 	struct sockaddr_in server = {AF_INET, 7000};
-	
+
 	server.sin_addr.s_addr = inet_addr("127.0.0.1");
 
 	if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
