@@ -35,12 +35,20 @@ void Server::run()
 {
 	char c = '\0';
 
-	to_listen();
+	try
+	{
+		to_listen();
+	}
+	catch(const std::exception& e)
+	{
+		printf("%s", e.what());
+		exit(1);
+	}
 
 	while(!exit_loop)
 	{
 		if((newsockfd = accept(sockfd, NULL, NULL)) == -1)
-		{                                                                                                            
+		{
 			perror("accept call failed");
 			continue;
 		}
@@ -63,20 +71,26 @@ void Server::to_listen()
 {
 	if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) 
 	{
-		perror("socket call failed");
-		exit(1);
+		std::string what("Server -> to_listen() -> socket() - ");
+		what+=strerror(errno);
+		what+="\n";
+		throw std::runtime_error(what);
 	}
 
 	if(bind(sockfd, (struct sockaddr *) &server, SIZE) == -1)
 	{
-		perror("bind call failed");
-		exit(1);
+		std::string what("Server -> to_listen() -> bind() - ");
+		what+=strerror(errno);
+		what+="\n";
+		throw std::runtime_error(what);
 	}
 
 	if(listen(sockfd, 5) == -1)
 	{
-		perror("listen call failed");
-		exit(1);
+		std::string what("Server -> to_listen() -> listen() - ");
+		what+=strerror(errno);
+		what+="\n";
+		throw std::runtime_error(what);
 	}
 }
 

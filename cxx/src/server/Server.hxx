@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
- #include <arpa/inet.h>
+#include <arpa/inet.h>
 #include <signal.h>
 #include <unistd.h>
 
@@ -12,6 +12,11 @@
 #include <cerrno>
 #include <cstdio>
 #include <cctype>
+#include <cerrno>
+#include <cstring>
+
+#include <stdexcept>
+#include <string>
 
 #define SIZE sizeof(struct sockaddr_in)
 
