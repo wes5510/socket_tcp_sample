@@ -1,41 +1,35 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef CLIENT_H
+#define CLIENT_H
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <signal.h>
 #include <unistd.h>
 
+#include <cctype>
 #include <cstdlib>
+#include <cstring>
 #include <cerrno>
 #include <cstdio>
-#include <cctype>
-#include <cerrno>
-#include <cstring>
 
-#include <stdexcept>
 #include <string>
+#include <stdexcept>
 
 #define SIZE sizeof(struct sockaddr_in)
 
-class Server
+class Client
 {
 	private:
 		int sockfd;
 		static int newsockfd;
 		struct sockaddr_in server;
 		static bool exit_loop;
-		void init_server_addr(const int port, const char* ip_addr);
-		void init_signal();
-		static void signal_handler(int signo);
-		void to_listen();
 		void work();
 	public:
-		Server(const int port, const char* ip_addr);
-		~Server();
-		void run();
+		Client(const int port, const char* ip_addr);
+		~Client();
+		void connect();
 };
 
 #endif

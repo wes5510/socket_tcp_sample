@@ -11,7 +11,8 @@ Server::Server(const int port, const char* ip_addr)
 
 void Server::init_server_addr(const int port, const char* ip_addr)
 {
-	server = {AF_INET, port};
+	server.sin_family = AF_INET;
+	server.sin_port = port;
 	server.sin_addr.s_addr = inet_addr(ip_addr); 
 }
 
@@ -33,8 +34,6 @@ void Server::signal_handler(int signo)
 
 void Server::run()
 {
-	char c = '\0';
-
 	try
 	{
 		to_listen();
@@ -53,18 +52,26 @@ void Server::run()
 			continue;
 		}
 
-		if(fork() == 0)
-		{
-			while(recv(newsockfd, &c, 1, 0) && !exit_loop)
-			{
-				c = toupper(c);
-				send(newsockfd, &c, 1, 0);
-			}
-			return;
-		}
+		work();
 	}
 
 	return;
+}
+
+void Server::work()
+{
+	char c = '\0';
+
+	if(fork() == 0)
+	{
+		while(recv(newsockfd, &c, 1, 0) && !exit_loop)
+		{
+			c = toupper(c);
+			send(newsockfd, &c, 1, 0);
+		}
+		exit_loop = true;
+		return;
+	}
 }
 
 void Server::to_listen()
